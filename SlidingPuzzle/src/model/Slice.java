@@ -15,10 +15,28 @@ import javafx.scene.paint.Color;
  */
 public class Slice {
     private Color color;
-    private final List<Square> listSquare = new ArrayList<>();
+    private List<Square> listSquare = new ArrayList<>();
     
     public void insertSquare(Square square){
         this.listSquare.add(square);
     }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public List<Square> getListSquare() {
+        return listSquare;
+    }
+
+    public void setListSquare(List<Square> listSquare) {
+        this.listSquare = listSquare;
+    }
+    
+    
     
 }

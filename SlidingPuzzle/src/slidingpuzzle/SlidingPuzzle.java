@@ -5,10 +5,16 @@
  */
 package slidingpuzzle;
 
+import java.util.Random;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -16,9 +22,12 @@ import javafx.stage.Stage;
  * @author Al-Hussein
  */
 public class SlidingPuzzle extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
+
+        GridPane grid = new GridPane();
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Home.fxml"));
         
         Scene scene = new Scene(root);
@@ -33,5 +42,5 @@ public class SlidingPuzzle extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
