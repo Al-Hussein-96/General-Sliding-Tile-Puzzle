@@ -5,8 +5,10 @@
  */
 package controller;
 
+import algortihms.BFS;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +35,19 @@ public class HomeController implements Initializable {
     @FXML
     void btnPlay(ActionEvent event) {
         Grid modelGrid = new Grid(4, 4);
-        RunGameController runGameController = new RunGameController(modelGrid);
+        BFS bfs = new BFS(modelGrid);
+
+        System.out.println("Win ? " + bfs.Solve());
+
+        Grid WinGrid = bfs.Solve();
+
+        if (WinGrid != null) {
+            modelGrid = WinGrid;
+        }
+        List<Grid> path = bfs.path(WinGrid);
+        
+        
+        RunGameController runGameController = new RunGameController(modelGrid,path);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/RunGame.fxml"));
 
         ((Node) event.getSource()).getScene().getWindow().hide();
@@ -47,7 +61,6 @@ public class HomeController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @FXML

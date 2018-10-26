@@ -1,7 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -12,11 +16,27 @@ import javafx.scene.paint.Paint;
  */
 public class Grid {
 
-    private static int Id = 1;
+    //  private static int Id = 1;
     private int Height;
     private int Weight;
     private Square[][] CurGrid;
     private List<Slice> listSlice = new ArrayList<>();
+
+    public Grid(Grid grid) {
+        this.Weight = grid.Weight;
+        this.Height = grid.Height;
+        this.CurGrid = new Square[Height][Weight];
+        this.initGrid();
+
+        for (int i = 0; i < grid.listSlice.size(); i++) {
+            this.listSlice.add(new Slice(grid.listSlice.get(i)));
+        }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                this.CurGrid[i][j] = new Square(i, j, grid.CurGrid[i][j].getStatus());
+            }
+        }
+    }
 
     public Grid(int Height, int Weight) {
         this.Height = Height;
@@ -31,7 +51,6 @@ public class Grid {
         for (int i = 0; i < this.Height; i++) {
             for (int j = 0; j < this.Weight; j++) {
                 this.CurGrid[i][j] = new Square(i, j, Color.WHITE);
-                this.CurGrid[i][j].setIdSquare(Id++);
             }
         }
     }
@@ -111,21 +130,19 @@ public class Grid {
         if (slice == null) {
             return false;
         }
-        System.out.println("dir: " + direction.toString());
+        //   System.out.println("dir: " + direction.toString());
         switch (direction) {
             case DOWN:
                 for (int i = 0; i < slice.getListSquare().size(); i++) {
                     Square square = slice.getListSquare().get(i);
                     int row = square.getRow() + 1;
                     int col = square.getCol();
-                    System.out.println("ROW: " + inside(row, col));
                     if (inside(row, col) == false) {
                         return false;
 
                     }
                     if (!this.CurGrid[row][col].getStatus().equals(Color.WHITE)
                             && !this.CurGrid[row][col].getStatus().equals(slice.getColor())) {
-                        System.out.println("dir:" + row + " " + col + " : " + slice.getColor() + " : " + this.CurGrid[row][col].getStatus());
                         return false;
                     }
                 }
@@ -135,14 +152,12 @@ public class Grid {
                     Square square = slice.getListSquare().get(i);
                     int row = square.getRow() - 1;
                     int col = square.getCol();
-                    System.out.println("ROW: " + inside(row, col));
                     if (inside(row, col) == false) {
                         return false;
 
                     }
                     if (!this.CurGrid[row][col].getStatus().equals(Color.WHITE)
                             && !this.CurGrid[row][col].getStatus().equals(slice.getColor())) {
-                        System.out.println("dir:" + row + " " + col + " : " + slice.getColor() + " : " + this.CurGrid[row][col].getStatus());
                         return false;
                     }
                 }
@@ -152,14 +167,12 @@ public class Grid {
                     Square square = slice.getListSquare().get(i);
                     int row = square.getRow();
                     int col = square.getCol() + 1;
-                    System.out.println("ROW: " + inside(row, col));
                     if (inside(row, col) == false) {
                         return false;
 
                     }
                     if (!this.CurGrid[row][col].getStatus().equals(Color.WHITE)
                             && !this.CurGrid[row][col].getStatus().equals(slice.getColor())) {
-                        System.out.println("dir:" + row + " " + col + " : " + slice.getColor() + " : " + this.CurGrid[row][col].getStatus());
                         return false;
                     }
                 }
@@ -169,14 +182,12 @@ public class Grid {
                     Square square = slice.getListSquare().get(i);
                     int row = square.getRow();
                     int col = square.getCol() - 1;
-                    System.out.println("ROW: " + inside(row, col));
                     if (inside(row, col) == false) {
                         return false;
 
                     }
                     if (!this.CurGrid[row][col].getStatus().equals(Color.WHITE)
                             && !this.CurGrid[row][col].getStatus().equals(slice.getColor())) {
-                        System.out.println("dir:" + row + " " + col + " : " + slice.getColor() + " : " + this.CurGrid[row][col].getStatus());
                         return false;
                     }
                 }
@@ -205,12 +216,35 @@ public class Grid {
             Square square = slice.getListSquare().get(i);
             int row = square.getRow() + (keyCode.equals(KeyCode.DOWN) == true ? 1 : 0) - (keyCode.equals(KeyCode.UP) == true ? 1 : 0);
             int col = square.getCol() + (keyCode.equals(KeyCode.RIGHT) == true ? 1 : 0) - (keyCode.equals(KeyCode.LEFT) == true ? 1 : 0);
-            System.out.println("ROW ROW:: " + row);
+            //System.out.println("ROW ROW:: " + row);
             square.setRow(row);
             square.setCol(col);
         }
 //        initGrid();
         buildGrid();
+    }
+
+    public Grid moveSliceCopy(KeyCode keyCode, Paint fill) {
+        Slice slice = null;
+
+        for (int i = 0; i < this.listSlice.size(); i++) {
+            if (this.listSlice.get(i).getColor() == fill) {
+                slice = this.listSlice.get(i);
+            }
+        }
+        if (slice == null) {
+            return null;
+        }
+        for (int i = 0; i < slice.getListSquare().size(); i++) {
+            Square square = slice.getListSquare().get(i);
+            int row = square.getRow() + (keyCode.equals(KeyCode.DOWN) == true ? 1 : 0) - (keyCode.equals(KeyCode.UP) == true ? 1 : 0);
+            int col = square.getCol() + (keyCode.equals(KeyCode.RIGHT) == true ? 1 : 0) - (keyCode.equals(KeyCode.LEFT) == true ? 1 : 0);
+            // System.out.println("ROW ROW:: " + row);
+            square.setRow(row);
+            square.setCol(col);
+        }
+        buildGrid();
+        return this;
     }
 
     private void buildGrid() {
@@ -226,6 +260,65 @@ public class Grid {
                 this.CurGrid[row][col].setStatus(square.getStatus());
             }
         }
+    }
+
+    public boolean isWinning() {
+        Slice slice = null;
+        for (Slice u : listSlice) {
+            if (u.getColor() == Color.RED) {
+                slice = u;
+            }
+        }
+
+        if (slice == null) {
+            return false;
+        }
+        boolean ok1 = false,ok2 = false;
+        for (Square u : slice.getListSquare()) {
+            if (!inside(u.getRow() + 1, u.getCol())) {
+                ok1 = true;
+            }
+            if (!inside(u.getRow(), u.getCol() + 1)) {
+                ok2 = true;
+            }
+        }
+        return ok1 && ok2;
+    }
+
+    public List<Grid> getPossibleMove() {
+        List<Grid> grids = new ArrayList<>();
+        for (Slice u : listSlice) {
+//            System.out.println("Slice Square:");
+//            u.print();
+            if (checkMove(KeyCode.UP, u.getColor())) {
+                System.out.println("Move Up");
+                Grid newGrid = new Grid(this);
+                newGrid.moveSlice(KeyCode.UP, u.getColor());
+                grids.add(newGrid);
+            }
+            if (checkMove(KeyCode.DOWN, u.getColor())) {
+                System.out.println("Move Down");
+                Grid newGrid = new Grid(this);
+                newGrid.printGrid();
+                newGrid.moveSlice(KeyCode.DOWN, u.getColor());
+                newGrid.printGrid();
+                System.out.println("Finish Print Grid");
+                grids.add(newGrid);
+            }
+            if (checkMove(KeyCode.RIGHT, u.getColor())) {
+                System.out.println("Move Right");
+                Grid newGrid = new Grid(this);
+                newGrid.moveSlice(KeyCode.RIGHT, u.getColor());
+                grids.add(newGrid);
+            }
+            if (checkMove(KeyCode.LEFT, u.getColor())) {
+                System.out.println("Move Left");
+                Grid newGrid = new Grid(this);
+                newGrid.moveSlice(KeyCode.LEFT, u.getColor());
+                grids.add(newGrid);
+            }
+        }
+        return grids;
     }
 
     public void printGrid() {
@@ -247,6 +340,34 @@ public class Grid {
             }
             System.out.println("");
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.Height;
+        hash = 79 * hash + this.Weight;
+        hash = 79 * hash + Arrays.deepHashCode(this.CurGrid);
+        hash = 79 * hash + Objects.hashCode(this.listSlice);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Grid other = (Grid) obj;
+        if (!Arrays.deepEquals(this.CurGrid, other.CurGrid)) {
+            return false;
+        }
+        return true;
     }
 
 }

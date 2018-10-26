@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.util.Objects;
 import javafx.scene.paint.Color;
 
 /**
@@ -22,6 +23,10 @@ public class Square {
         this.row = row;
         this.col = col;
         this.status = status;
+    }
+
+    Square(Square get) {
+        this(get.row,get.col,get.status);
     }
 
     public int getRow() {
@@ -54,6 +59,48 @@ public class Square {
 
     public void setIdSquare(int idSquare) {
         this.idSquare = idSquare;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + this.idSquare;
+        hash = 29 * hash + this.row;
+        hash = 29 * hash + this.col;
+        hash = 29 * hash + Objects.hashCode(this.status);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Square other = (Square) obj;
+        if (this.idSquare != other.idSquare) {
+            return false;
+        }
+        if (this.row != other.row) {
+            return false;
+        }
+        if (this.col != other.col) {
+            return false;
+        }
+        if (!Objects.equals(this.status, other.status)) {
+            return false;
+        }
+        return true;
     }
 
 }

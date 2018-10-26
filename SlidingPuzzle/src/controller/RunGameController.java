@@ -5,28 +5,19 @@
  */
 package controller;
 
-import com.sun.javafx.scene.traversal.Direction;
 import java.net.URL;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Cell;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javax.jws.Oneway;
 import model.Grid;
 import model.Slice;
 import model.Square;
@@ -39,6 +30,7 @@ import model.Square;
 public class RunGameController implements Initializable, EventHandler<MouseEvent> {
 
     private Grid modelGrid;
+    private List<Grid> path = new ArrayList<>();
 
     @FXML
     private GridPane gridpane;
@@ -91,8 +83,10 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
     @FXML
     private Rectangle rec16;
 
-    public RunGameController(Grid modelGrid) {
+    public RunGameController(Grid modelGrid, List<Grid> path) {
         this.modelGrid = modelGrid;
+        this.path = path;
+
     }
 
     @Override
@@ -149,7 +143,7 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
         }
         for (Slice slice : modelGrid.getListSlice()) {
             for (Square square : slice.getListSquare()) {
-                System.out.println("row,col: " + square.getRow() + " " + square.getCol());
+                //      System.out.println("row,col: " + square.getRow() + " " + square.getCol());
                 Rectangle rectangle = (Rectangle) getNodeFromGridPane(this.gridpane, square.getRow(), square.getCol());
                 rectangle.setFill(slice.getColor());
 
@@ -177,10 +171,10 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
          * * Move
          */
         gridpane.getScene().setOnKeyPressed((ev) -> {
-            System.out.println("ON CLICK KEY");
+            // System.out.println("ON CLICK KEY");
 
             boolean move = modelGrid.checkMove(ev.getCode(), rectangle.getFill());
-            System.out.println("move: " + move + " : " + ev.getCode());
+            //   System.out.println("move: " + move + " : " + ev.getCode());
             if (move) {
                 modelGrid.moveSlice(ev.getCode(), rectangle.getFill());
             }
@@ -196,10 +190,12 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
                     ((Rectangle) node).setStrokeWidth(1);
                 }
             }
+            if (modelGrid.isWinning()) {
+                System.out.println("Winner");
+            }
         });
 
-        System.out.println("node: " + rectangle.toString());
-
+//        System.out.println("node: " + rectangle.toString());
     }
 
 }
