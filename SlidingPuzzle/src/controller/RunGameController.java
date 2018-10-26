@@ -9,15 +9,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.Grid;
 import model.Slice;
 import model.Square;
@@ -31,6 +38,8 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
 
     private Grid modelGrid;
     private List<Grid> path = new ArrayList<>();
+
+    private int CurrentGrid = 0;
 
     @FXML
     private GridPane gridpane;
@@ -83,6 +92,11 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
     @FXML
     private Rectangle rec16;
 
+    @FXML
+    private Button animation;
+
+    Timeline timeline = null;
+
     public RunGameController(Grid modelGrid, List<Grid> path) {
         this.modelGrid = modelGrid;
         this.path = path;
@@ -120,6 +134,19 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
         rec14.setOnMouseClicked(this);
         rec15.setOnMouseClicked(this);
         rec16.setOnMouseClicked(this);
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), (e) -> {
+            if (CurrentGrid + 1 < path.size()) {
+                modelGrid = path.get(++CurrentGrid);
+                initGrid();
+            } else {
+                CurrentGrid = -1;
+                modelGrid = path.get(++CurrentGrid);
+                initGrid();
+            }
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.setRate(2);
 
     }
 
@@ -196,6 +223,33 @@ public class RunGameController implements Initializable, EventHandler<MouseEvent
         });
 
 //        System.out.println("node: " + rectangle.toString());
+    }
+
+    @FXML
+    private void btnStartAnimation(ActionEvent event) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            timeline.pause();
+            animation.setText("Start Animation");
+        } else {
+            timeline.play();
+            animation.setText("Stop Animation");
+        }
+    }
+
+    @FXML
+    private void btnPrevious(ActionEvent event) {
+        if (CurrentGrid - 1 >= 0) {
+            modelGrid = path.get(--CurrentGrid);
+            initGrid();
+        }
+    }
+
+    @FXML
+    private void btnNext(ActionEvent event) {
+        if (CurrentGrid + 1 < path.size()) {
+            modelGrid = path.get(++CurrentGrid);
+            initGrid();
+        }
     }
 
 }

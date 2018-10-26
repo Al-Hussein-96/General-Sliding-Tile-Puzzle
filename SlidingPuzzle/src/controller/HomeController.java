@@ -34,20 +34,18 @@ public class HomeController implements Initializable {
 
     @FXML
     void btnPlay(ActionEvent event) {
-        Grid modelGrid = new Grid(4, 4);
+        Grid modelGrid = new Grid(4, 4, 7);
         BFS bfs = new BFS(modelGrid);
 
         System.out.println("Win ? " + bfs.Solve());
 
         Grid WinGrid = bfs.Solve();
 
-        if (WinGrid != null) {
-            modelGrid = WinGrid;
-        }
         List<Grid> path = bfs.path(WinGrid);
-        
-        
-        RunGameController runGameController = new RunGameController(modelGrid,path);
+
+        System.out.println("Path Size: " + path.size());
+
+        RunGameController runGameController = new RunGameController(modelGrid, path);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/RunGame.fxml"));
 
         ((Node) event.getSource()).getScene().getWindow().hide();

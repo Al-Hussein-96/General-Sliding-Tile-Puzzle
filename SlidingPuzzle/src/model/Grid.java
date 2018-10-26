@@ -19,6 +19,7 @@ public class Grid {
     //  private static int Id = 1;
     private int Height;
     private int Weight;
+    private int NumGrid;
     private Square[][] CurGrid;
     private List<Slice> listSlice = new ArrayList<>();
 
@@ -38,19 +39,26 @@ public class Grid {
         }
     }
 
-    public Grid(int Height, int Weight) {
+    public Grid(int Height, int Weight, int NumGrid) {
         this.Height = Height;
         this.Weight = Weight;
+        this.NumGrid = NumGrid;
         this.CurGrid = new Square[this.Height][this.Weight];
+        addSlices(NumGrid);
+
         initGrid();
-        addFirstSlice();
-        addSecondSlice();
+
     }
 
     private void initGrid() {
         for (int i = 0; i < this.Height; i++) {
             for (int j = 0; j < this.Weight; j++) {
                 this.CurGrid[i][j] = new Square(i, j, Color.WHITE);
+            }
+        }
+        for (Slice s : listSlice) {
+            for (Square square : s.getListSquare()) {
+                this.CurGrid[square.getRow()][square.getCol()] = square;
             }
         }
     }
@@ -85,38 +93,6 @@ public class Grid {
 
     public void setListSlice(List<Slice> listSlice) {
         this.listSlice = listSlice;
-    }
-
-    private void addFirstSlice() {
-        Slice slice = new Slice();
-        slice.setColor(Color.RED);
-        slice.insertSquare(new Square(0, 0, Color.RED));
-        slice.insertSquare(new Square(0, 1, Color.RED));
-        slice.insertSquare(new Square(0, 2, Color.RED));
-        slice.insertSquare(new Square(1, 0, Color.RED));
-        slice.insertSquare(new Square(1, 2, Color.RED));
-        slice.insertSquare(new Square(2, 2, Color.RED));
-
-        this.listSlice.add(slice);
-        CurGrid[0][0].setStatus(Color.RED);
-        CurGrid[0][1].setStatus(Color.RED);
-        CurGrid[0][2].setStatus(Color.RED);
-        CurGrid[1][0].setStatus(Color.RED);
-        CurGrid[1][2].setStatus(Color.RED);
-        CurGrid[2][2].setStatus(Color.RED);
-    }
-
-    private void addSecondSlice() {
-        Slice slice = new Slice();
-        slice.setColor(Color.YELLOW);
-        slice.insertSquare(new Square(1, 1, Color.YELLOW));
-        slice.insertSquare(new Square(2, 0, Color.YELLOW));
-        slice.insertSquare(new Square(2, 1, Color.YELLOW));
-        this.listSlice.add(slice);
-        CurGrid[1][1].setStatus(Color.YELLOW);
-        CurGrid[2][0].setStatus(Color.YELLOW);
-        CurGrid[2][1].setStatus(Color.YELLOW);
-
     }
 
     public boolean checkMove(KeyCode direction, Paint fill) {
@@ -273,7 +249,7 @@ public class Grid {
         if (slice == null) {
             return false;
         }
-        boolean ok1 = false,ok2 = false;
+        boolean ok1 = false, ok2 = false;
         for (Square u : slice.getListSquare()) {
             if (!inside(u.getRow() + 1, u.getCol())) {
                 ok1 = true;
@@ -291,28 +267,22 @@ public class Grid {
 //            System.out.println("Slice Square:");
 //            u.print();
             if (checkMove(KeyCode.UP, u.getColor())) {
-                System.out.println("Move Up");
                 Grid newGrid = new Grid(this);
                 newGrid.moveSlice(KeyCode.UP, u.getColor());
                 grids.add(newGrid);
             }
             if (checkMove(KeyCode.DOWN, u.getColor())) {
-                System.out.println("Move Down");
                 Grid newGrid = new Grid(this);
-                newGrid.printGrid();
+                //     newGrid.printGrid();
                 newGrid.moveSlice(KeyCode.DOWN, u.getColor());
-                newGrid.printGrid();
-                System.out.println("Finish Print Grid");
                 grids.add(newGrid);
             }
             if (checkMove(KeyCode.RIGHT, u.getColor())) {
-                System.out.println("Move Right");
                 Grid newGrid = new Grid(this);
                 newGrid.moveSlice(KeyCode.RIGHT, u.getColor());
                 grids.add(newGrid);
             }
             if (checkMove(KeyCode.LEFT, u.getColor())) {
-                System.out.println("Move Left");
                 Grid newGrid = new Grid(this);
                 newGrid.moveSlice(KeyCode.LEFT, u.getColor());
                 grids.add(newGrid);
@@ -368,6 +338,184 @@ public class Grid {
             return false;
         }
         return true;
+    }
+
+    private void addFirstSlice() {
+
+    }
+
+    private void addSecondSlice() {
+
+    }
+
+    private void addSlices(int NumGrid) {
+        Slice slice = new Slice();
+
+        switch (NumGrid) {
+            case 1:
+                slice.setColor(Color.RED);
+                slice.insertSquare(new Square(0, 0, Color.RED));
+                slice.insertSquare(new Square(0, 1, Color.RED));
+                slice.insertSquare(new Square(0, 2, Color.RED));
+                slice.insertSquare(new Square(1, 0, Color.RED));
+                slice.insertSquare(new Square(1, 2, Color.RED));
+                slice.insertSquare(new Square(2, 2, Color.RED));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOW);
+                slice.insertSquare(new Square(1, 1, Color.YELLOW));
+                slice.insertSquare(new Square(2, 0, Color.YELLOW));
+                slice.insertSquare(new Square(2, 1, Color.YELLOW));
+                this.listSlice.add(slice);
+                break;
+            case 2:
+                slice.setColor(Color.RED);
+                slice.insertSquare(new Square(1, 0, Color.RED));
+                slice.insertSquare(new Square(2, 0, Color.RED));
+                slice.insertSquare(new Square(2, 1, Color.RED));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOW);
+                slice.insertSquare(new Square(1, 2, Color.YELLOW));
+                slice.insertSquare(new Square(2, 2, Color.YELLOW));
+                slice.insertSquare(new Square(2, 3, Color.YELLOW));
+                slice.insertSquare(new Square(3, 3, Color.YELLOW));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BLUE);
+                slice.insertSquare(new Square(3, 1, Color.BLUE));
+                slice.insertSquare(new Square(3, 2, Color.BLUE));
+                this.listSlice.add(slice);
+                break;
+            case 3:
+                slice.setColor(Color.RED);
+                slice.insertSquare(new Square(0, 2, Color.RED));
+                slice.insertSquare(new Square(0, 3, Color.RED));
+                slice.insertSquare(new Square(1, 2, Color.RED));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOW);
+                slice.insertSquare(new Square(1, 0, Color.YELLOW));
+                slice.insertSquare(new Square(1, 1, Color.YELLOW));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BLUE);
+                slice.insertSquare(new Square(2, 1, Color.BLUE));
+                slice.insertSquare(new Square(3, 0, Color.BLUE));
+                slice.insertSquare(new Square(3, 1, Color.BLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.DARKGOLDENROD);
+                slice.insertSquare(new Square(2, 2, Color.DARKGOLDENROD));
+                slice.insertSquare(new Square(3, 2, Color.DARKGOLDENROD));
+                this.listSlice.add(slice);
+                break;
+            case 4:
+                slice.setColor(Color.RED);
+                slice.insertSquare(new Square(0, 0, Color.RED));
+                slice.insertSquare(new Square(1, 0, Color.RED));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOW);
+                slice.insertSquare(new Square(0, 2, Color.YELLOW));
+                slice.insertSquare(new Square(0, 3, Color.YELLOW));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BLUE);
+                slice.insertSquare(new Square(1, 2, Color.BLUE));
+                slice.insertSquare(new Square(2, 2, Color.BLUE));
+                slice.insertSquare(new Square(2, 3, Color.BLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.CADETBLUE);
+                slice.insertSquare(new Square(2, 1, Color.CADETBLUE));
+                slice.insertSquare(new Square(3, 1, Color.CADETBLUE));
+                slice.insertSquare(new Square(3, 2, Color.CADETBLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BROWN);
+                slice.insertSquare(new Square(2, 0, Color.BROWN));
+                this.listSlice.add(slice);
+                break;
+            case 7:
+                slice.setColor(Color.RED);
+                slice.insertSquare(new Square(0, 1, Color.RED));
+                slice.insertSquare(new Square(0, 2, Color.RED));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOW);
+                slice.insertSquare(new Square(0, 3, Color.YELLOW));
+                slice.insertSquare(new Square(1, 3, Color.YELLOW));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOWGREEN);
+                slice.insertSquare(new Square(2, 3, Color.YELLOWGREEN));
+                slice.insertSquare(new Square(3, 3, Color.YELLOWGREEN));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BLUE);
+                slice.insertSquare(new Square(1, 0, Color.BLUE));
+                slice.insertSquare(new Square(1, 1, Color.BLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.CADETBLUE);
+                slice.insertSquare(new Square(2, 1, Color.CADETBLUE));
+                slice.insertSquare(new Square(2, 2, Color.CADETBLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BROWN);
+                slice.insertSquare(new Square(1, 2, Color.BROWN));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.GREEN);
+                slice.insertSquare(new Square(3, 2, Color.GREEN));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.DARKKHAKI);
+                slice.insertSquare(new Square(2, 0, Color.DARKKHAKI));
+                slice.insertSquare(new Square(3, 0, Color.DARKKHAKI));
+                this.listSlice.add(slice);
+
+                break;
+            case 10:
+                slice.setColor(Color.RED);
+                slice.insertSquare(new Square(0, 0, Color.RED));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOW);
+                slice.insertSquare(new Square(0, 1, Color.YELLOW));
+                slice.insertSquare(new Square(0, 2, Color.YELLOW));
+                slice.insertSquare(new Square(0, 3, Color.YELLOW));
+                slice.insertSquare(new Square(1, 2, Color.YELLOW));
+                slice.insertSquare(new Square(1, 3, Color.YELLOW));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.YELLOWGREEN);
+                slice.insertSquare(new Square(1, 0, Color.YELLOWGREEN));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BLUE);
+                slice.insertSquare(new Square(1, 1, Color.BLUE));
+                slice.insertSquare(new Square(2, 1, Color.BLUE));
+                slice.insertSquare(new Square(2, 2, Color.BLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.CADETBLUE);
+                slice.insertSquare(new Square(2, 0, Color.CADETBLUE));
+                slice.insertSquare(new Square(3, 0, Color.CADETBLUE));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.BROWN);
+                slice.insertSquare(new Square(3, 1, Color.BROWN));
+                this.listSlice.add(slice);
+                slice = new Slice();
+                slice.setColor(Color.GREEN);
+                slice.insertSquare(new Square(3, 2, Color.GREEN));
+                slice.insertSquare(new Square(3, 3, Color.GREEN));
+                this.listSlice.add(slice);
+                break;
+        }
+
     }
 
 }

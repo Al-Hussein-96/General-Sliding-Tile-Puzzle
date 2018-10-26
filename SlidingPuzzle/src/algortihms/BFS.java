@@ -21,7 +21,7 @@ public class BFS {
 
     public BFS(Grid grid) {
         this.grid = grid;
-        this.grid.printGrid();
+        //  this.grid.printGrid();
     }
 
     public List<Grid> path(Grid finalGrid) {
@@ -44,16 +44,15 @@ public class BFS {
         map.put(grid, null);
 
         while (!queue.isEmpty()) {
-            System.out.println("Size: " + queue.size());
+            //     System.out.println("Size: " + queue.size());
             Grid cur = queue.poll();
-            System.out.println("New Grid: ");
-            cur.printGrid();
+            // System.out.println("New Grid: ");
+            // cur.printGrid();
             if (cur.isWinning()) {
                 return cur;
             }
 
             List<Grid> AllMoves = cur.getPossibleMove();
-            System.out.println("Size: " + AllMoves.size());
             for (Grid u : AllMoves) {
                 if (hashSet.contains(u.hashCode())) {
                     continue;
