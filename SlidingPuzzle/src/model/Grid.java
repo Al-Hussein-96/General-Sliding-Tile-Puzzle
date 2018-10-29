@@ -1,5 +1,6 @@
 package model;
 
+import algortihms.ManhattanDistance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ import javafx.scene.paint.Paint;
  *
  * @author Al-Hussein
  */
-public class Grid {
+public class Grid{
 
     //  private static int Id = 1;
     private int Height;
@@ -516,6 +517,15 @@ public class Grid {
                 break;
         }
 
+    }
+
+//    @Override
+//    public int compareTo(Grid o) {
+//        return this.getManhattanDistance() - o.getManhattanDistance();
+//    }
+
+    public int getManhattanDistance() {
+        return (new ManhattanDistance(this).getDistance());
     }
 
 }

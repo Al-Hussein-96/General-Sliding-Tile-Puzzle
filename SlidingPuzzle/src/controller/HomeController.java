@@ -6,6 +6,8 @@
 package controller;
 
 import algortihms.BFS;
+import algortihms.DFS;
+import algortihms.Dijkstra;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -36,16 +38,20 @@ public class HomeController implements Initializable {
     void btnPlay(ActionEvent event) {
         Grid modelGrid = new Grid(4, 4, 7);
         BFS bfs = new BFS(modelGrid);
+        Dijkstra dijkstra = new Dijkstra(modelGrid);
 
-        System.out.println("Win ? " + bfs.Solve());
 
-        Grid WinGrid = bfs.Solve();
+        Grid WinGrid1 = bfs.Solve();
+        Grid WinGrid2 = dijkstra.Solve();
 
-        List<Grid> path = bfs.path(WinGrid);
+        List<Grid> path1 = bfs.path(WinGrid1);
+        
+        List<Grid> path2 = dijkstra.path(WinGrid2);
+      //  DFS dfs = new DFS(modelGrid);
 
-        System.out.println("Path Size: " + path.size());
+        System.out.println("Path1: " + path1.size() + " Path2: " + path2.size());
 
-        RunGameController runGameController = new RunGameController(modelGrid, path);
+        RunGameController runGameController = new RunGameController(modelGrid, path1);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/RunGame.fxml"));
 
         ((Node) event.getSource()).getScene().getWindow().hide();
