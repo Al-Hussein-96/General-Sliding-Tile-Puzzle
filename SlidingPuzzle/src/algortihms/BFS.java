@@ -18,6 +18,7 @@ public class BFS {
 
     private Grid grid;
     Map<Grid, Grid> map = new HashMap<>();
+    private int NumberOfGrids = 0;
 
     public BFS(Grid grid) {
         this.grid = grid;
@@ -44,6 +45,8 @@ public class BFS {
         map.put(grid, null);
 
         while (!queue.isEmpty()) {
+            this.NumberOfGrids++;
+
             //     System.out.println("Size: " + queue.size());
             Grid cur = queue.poll();
             // System.out.println("New Grid: ");
@@ -64,6 +67,14 @@ public class BFS {
         }
 
         return null;
+    }
+
+    public int getNumberOfGrids() {
+        return NumberOfGrids;
+    }
+
+    public void setNumberOfGrids(int NumberOfGrids) {
+        this.NumberOfGrids = NumberOfGrids;
     }
 
 }

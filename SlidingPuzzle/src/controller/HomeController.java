@@ -40,16 +40,16 @@ public class HomeController implements Initializable {
         BFS bfs = new BFS(modelGrid);
         Dijkstra dijkstra = new Dijkstra(modelGrid);
 
-
         Grid WinGrid1 = bfs.Solve();
         Grid WinGrid2 = dijkstra.Solve();
 
         List<Grid> path1 = bfs.path(WinGrid1);
-        
+
         List<Grid> path2 = dijkstra.path(WinGrid2);
-      //  DFS dfs = new DFS(modelGrid);
+        //  DFS dfs = new DFS(modelGrid);
 
         System.out.println("Path1: " + path1.size() + " Path2: " + path2.size());
+        System.out.println("Num1: " + bfs.getNumberOfGrids() + " Num2: " + dijkstra.getNumberOfGrids());
 
         RunGameController runGameController = new RunGameController(modelGrid, path1);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/RunGame.fxml"));

@@ -16,8 +16,9 @@ public class ManhattanDistance {
     public ManhattanDistance(Grid grid) {
         this.grid = grid;
     }
+    //**** |n-x| + |m-y|
 
-    public  int getDistance() {
+    public int getDistance() {
         int dist = 10000;
         for (Slice slice : grid.getListSlice()) {
             if (slice.getColor() == Color.RED) {
